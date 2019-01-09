@@ -40,8 +40,7 @@ module Holdem
 
     def <=>(other)
       id <=> other.id
-  end
-
+    end
   end
 
 end

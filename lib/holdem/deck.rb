@@ -19,7 +19,8 @@ module Holdem
       cards.each {|card| remove_card(card) }
     end
 
-    def remove_card(card)
+    def remove_card(card_str)
+      card = card_str.is_a?(Holdem::Card) ? card_str : Card.new(card_str)
       @order.delete(card.id)
     end
 

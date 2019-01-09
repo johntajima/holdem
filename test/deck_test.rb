@@ -47,6 +47,13 @@ class DeckTest < Minitest::Test
     assert !@deck.cards.include?(card)
   end
 
+  def test_remove_card_removes_card_as_string
+    card = Holdem::Card.new('2c')
+    assert @deck.cards.include?(card)
+    @deck.remove_card('2c')
+    assert !@deck.cards.include?(card)
+  end
+
   # remove_cards
 
   def test_remove_cards_removes_multiple_cards_at_once
