@@ -65,7 +65,7 @@ class PokerRankTest < Minitest::Test
   # straight
 
   def test_detect_straight
-    cards = build_hand("3h 4c 4d 7h 5s 6d")
+    cards = build_hand("3h 4c 4d 7h 5s 6d Td")
     @pokerhand = Holdem::PokerRank.new(cards)
 
     assert_equal :straight, @pokerhand.rank
@@ -73,7 +73,7 @@ class PokerRankTest < Minitest::Test
   end
 
   def test_straight_uses_higher_straight_when_two_straights_exist
-    cards = build_hand("3h 4c 7h 5s 6d 2c")
+    cards = build_hand("3h 4c 7h 5s 6d 2c Jd")
     @pokerhand = Holdem::PokerRank.new(cards)
 
     assert_equal :straight, @pokerhand.rank
@@ -81,7 +81,7 @@ class PokerRankTest < Minitest::Test
   end
 
   def test_detect_wheel_straight
-    cards = build_hand("3h 4c Ah 5s Kd 2c")
+    cards = build_hand("3h 4c Ah 5s Kd 2c Jd")
     @pokerhand = Holdem::PokerRank.new(cards)
 
     assert_equal :straight, @pokerhand.rank
@@ -89,12 +89,40 @@ class PokerRankTest < Minitest::Test
   end
 
   def test_straight_picks_higher_straight_over_wheel
-    cards = build_hand("3h 4c Ah 5s 6d 2c")
+    cards = build_hand("3h 4c Ah 5s 6d 2c Jd")
     @pokerhand = Holdem::PokerRank.new(cards)
 
     assert_equal :straight, @pokerhand.rank
     assert_equal "2c 3h 4c 5s 6d", @pokerhand.hand_as_string
   end
+
+  # flush
+  def test_detect_flush
+    cards = build_hand("3h 4h 7h 5h Qs 2c Jh")
+    @pokerhand = Holdem::PokerRank.new(cards)
+
+    assert_equal :flush, @pokerhand.rank
+    assert_equal "Jh 7h 5h 4h 3h", @pokerhand.hand_as_string
+  end
+
+  def test_flush_picks_higher_flush
+    cards = build_hand("3h 4h 7h 5h Ah 2c Jh")
+    @pokerhand = Holdem::PokerRank.new(cards)
+
+    assert_equal :flush, @pokerhand.rank
+    assert_equal "Ah Jh 7h 5h 4h", @pokerhand.hand_as_string
+  end
+
+
+  # Four of a kind
+  def test_detect_four_kind
+    cards = build_hand("Jh Jd Js Kh Jc Ah 7c")
+    @pokerhand = Holdem::PokerRank.new(cards)
+
+    assert_equal :four_kind, @pokerhand.rank
+    assert_equal "Jh Jd Js Jc Ah", @pokerhand.hand_as_string
+  end
+
 
   private
 

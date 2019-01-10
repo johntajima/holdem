@@ -52,7 +52,12 @@ module Holdem
     end
 
     def build_four_kind(cards)
-    #  @rank = :four_kind
+      selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} == 4}
+      return if selected.empty?
+
+      @rank = :four_kind
+      @key_cards = selected
+      @hand = @key_cards + (cards - selected).slice(0,1)
     end
 
     def build_full_house(cards)
@@ -60,7 +65,10 @@ module Holdem
     end
 
     def build_flush(cards)
-    #  @rank = :flush
+      selected = cards.select {|card| cards.count {|c| c.suit == card.suit} >= 5}
+      if !selected.empty?
+        set_rank(:flush, selected, cards)
+      end
     end
 
     def build_straight(cards)
@@ -71,24 +79,18 @@ module Holdem
       uniq_cards = cards.uniq {|card| card.rank_value }
       uniq_cards.each_cons(5).each do |set|
         if set.each_cons(2).all? {|a,b| a.rank_value == b.rank_value + 1}
-          @rank = :straight
-          @hand = set.reverse
-          @key_cards = @hand
-          return true
+          set_rank(:straight, set.reverse, cards)
         end
       end
       false
     end
 
     def build_wheel(cards)
-      wheel_sorted = cards.sort {|a,b| a.wheel_rank_value <=> b.wheel_rank_value}
+      wheel_sorted = wheel_sort(cards)
       uniq_cards = wheel_sorted.uniq {|card| card.wheel_rank_value }
       uniq_cards.each_cons(5).each do |set|
         if set.each_cons(2).all? {|a,b| b.wheel_rank_value == a.wheel_rank_value + 1}
-          @rank = :straight
-          @hand = set
-          @key_cards = @hand
-          return true
+          set_rank(:straight, set, cards)
         end
       end
       false
@@ -96,42 +98,53 @@ module Holdem
 
     def build_three_kind(cards)
       selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 2}
-      return if selected.empty?
-
-      @rank = :three_kind
-      @key_cards = selected
-      @hand = @key_cards + (cards - selected).slice(0,2)
+      if !selected.empty?
+        set_rank(:three_kind, selected, cards)
+      end
     end
 
     def build_two_pair(cards)
       selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}
       return if selected.count < 4
-
-      @rank = :two_pair
-      @key_cards = selected.slice(0,4)
-      @hand = @key_cards + (cards - @key_cards).slice(0,1)
+      if !selected.empty?
+        set_rank(:two_pair, selected, cards)
+      end
     end
 
     def build_pair(cards)
       selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}
-      return if selected.empty?
-
-      @rank = :pair
-      @key_cards = selected
-      @hand = @key_cards + (cards - @key_cards).slice(0,3)
+      if !selected.empty?
+        set_rank(:pair, selected, cards)
+      end
     end
 
     def build_high_card(cards)
-      @rank = :high_card
-      @hand = cards.slice(0,5)
-      @key_cards = @hand.slice(0,1)
+      set_rank(:high_card, cards.slice(0,1), cards)
     end
 
 
     private 
 
+    def set_rank(key, selected, cards)
+      @rank = key
+      key_cards_count = case @rank
+        when :high_card then 1
+        when :pair then 2
+        when :three_kind then 3
+        when :two_pair, :four_kind then 4
+        else 5
+      end
+
+      @key_cards = selected.slice(0,key_cards_count)
+      @hand      = @key_cards + (cards - @key_cards).slice(0, (5 - key_cards_count))
+    end
+
     def sort_cards(cards)
       cards.sort {|a,b| b.rank_value <=> a.rank_value }
+    end
+
+    def wheel_sort(cards)
+      cards.sort {|a,b| a.wheel_rank_value <=> b.wheel_rank_value }
     end
 
   end
