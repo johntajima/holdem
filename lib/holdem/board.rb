@@ -4,7 +4,9 @@ module Holdem
 
     attr_reader :cards
 
-    def initialize(cards)
+    FULL_BOARD = 5
+
+    def initialize(cards = [])
       @cards = cards.map {|card| Holdem::Card.new(card)}
     end
 
@@ -18,6 +20,15 @@ module Holdem
 
     def river
       cards[4]
+    end
+
+    def missing_cards
+      FULL_BOARD - @cards.count
+    end
+
+    def add_card(card)
+      raise if cards.count == FULL_BOARD
+      @cards.push(Holdem::Card.new(card))
     end
 
     def inspect

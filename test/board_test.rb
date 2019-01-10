@@ -29,4 +29,27 @@ class BoardTest < Minitest::Test
     assert_nil @board.river
   end
 
+  # add_card
+
+  def test_add_cards_to_missing_board
+    @board = Holdem::Board.new
+    assert_equal 5, @board.missing_cards
+    @board.add_card("Kh")
+    @board.add_card("Qh")
+    @board.add_card("4d")
+    assert_equal 2, @board.missing_cards    
+  end
+
+  def test_cannot_add_cards_to_full_board
+    @board = Holdem::Board.new(["As", "3h", "4d", "5c", "Kh"])
+    assert_equal 0, @board.missing_cards
+    assert_raises StandardError do 
+      @board.add_card("Ac")
+    end
+  end
+
+  def test_cannot_add_existing_card_to_board
+    #
+  end
+
 end
