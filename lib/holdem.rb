@@ -2,7 +2,7 @@ require "holdem/version"
 require "holdem/errors"
 require "holdem/card"
 require "holdem/deck"
-
+require 'holdem/board'
 
 # card index 0-12 clubs, 13-x hearts, ..., ...
 
