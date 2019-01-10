@@ -14,8 +14,12 @@ module Holdem
     }
 
     def initialize(card)
-      @rank = card[0]
-      @suit = card[1]
+      if card.is_a?(Holdem::Card)
+        @rank = card.rank
+        @suit = card.suit
+      else
+        @rank, @suit = card.split("")
+      end
     end
 
     def to_s
@@ -35,7 +39,7 @@ module Holdem
     end
 
     def id
-      (Holdem::SUITS.index(suit) * Holdem::SUIT_COUNT) + Holdem::RANKS.index(rank)
+      @id ||= (Holdem::SUITS.index(suit) * Holdem::SUIT_COUNT) + Holdem::RANKS.index(rank)
     end
 
     def <=>(other)
