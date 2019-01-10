@@ -10,8 +10,8 @@ class HandTest < Minitest::Test
 
   def test_create_new_hand
     @hand = Holdem::Hand.new([@cards1, @cards2], @board)
-    p @hand.board
-    p @hand.players
+    # p @hand.board
+    # p @hand.players
   end
 
 end

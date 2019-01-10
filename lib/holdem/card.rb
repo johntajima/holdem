@@ -38,6 +38,10 @@ module Holdem
       ICONS[suit]
     end
 
+    def rank_value
+      Holdem::RANKS.index(rank) + 2
+    end
+
     def id
       @id ||= (Holdem::SUITS.index(suit) * Holdem::SUIT_COUNT) + Holdem::RANKS.index(rank)
     end
@@ -48,3 +52,4 @@ module Holdem
   end
 
 end
+

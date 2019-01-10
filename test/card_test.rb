@@ -23,5 +23,15 @@ class CardTest < Minitest::Test
     assert_equal @card.id, @card2.id
   end
 
+  # rank_value
+  def test_rank_value_of_card
+    a = Holdem::Card.new('As')
+    b = Holdem::Card.new('4h');
+    c =  Holdem::Card.new('Kh');
+    d = Holdem::Card.new('Js')
+    new_order = [a,b,c,d].sort {|a,b| b.rank_value <=> a.rank_value }
+    assert_equal [a, c, d, b], new_order
+  end
+
   # test validate syntax (Ten, no other chars, upper/lower case, etc.)
 end
