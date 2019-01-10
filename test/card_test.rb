@@ -29,7 +29,7 @@ class CardTest < Minitest::Test
     b = Holdem::Card.new('4h');
     c =  Holdem::Card.new('Kh');
     d = Holdem::Card.new('Js')
-    new_order = [a,b,c,d].sort {|a,b| b.rank_value <=> a.rank_value }
+    new_order = [a,b,c,d].sort {|x,y| y.rank_value <=> x.rank_value }
     assert_equal [a, c, d, b], new_order
   end
 
@@ -37,6 +37,12 @@ class CardTest < Minitest::Test
   def test_ace_value_is_1_for_wheel_rank_value
     a = Holdem::Card.new('As')
     assert_equal 1, a.wheel_rank_value    
+  end
+
+  def test_cards_with_same_rank_but_different_suits_have_different_ids
+    a = Holdem::Card.new('As')
+    b = Holdem::Card.new('Ac')
+    assert a.id != b.id
   end
 
   # test validate syntax (Ten, no other chars, upper/lower case, etc.)

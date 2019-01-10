@@ -63,7 +63,15 @@ module Holdem
     end
 
     def build_full_house(cards)
-    #  @rank = :full_house
+      # find three of a kind
+      sets = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 2}
+      return if sets.empty?
+
+      pairs_group = cards - sets.slice(0,3)
+      pairs = pairs_group.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}
+      return if pairs.count < 2
+
+      set_rank(:full_house, sets.slice(0,3) + pairs.slice(0,2), cards)
     end
 
     def build_flush(cards)

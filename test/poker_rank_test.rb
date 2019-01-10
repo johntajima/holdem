@@ -113,8 +113,32 @@ class PokerRankTest < Minitest::Test
     assert_equal "Ah Jh 7h 5h 4h", @pokerhand.hand_as_string
   end
 
+  # full house
+
+  def test_detect_full_house
+    cards = build_hand("Jh Jd Js Kh Ac Qh Kc")
+    @pokerhand = Holdem::PokerRank.new(cards)
+    assert_equal :full_house, @pokerhand.rank
+    assert_equal "Jh Jd Js Kh Kc", @pokerhand.hand_as_string
+  end
+
+  def test_select_bigger_full_house_with_two_sets
+    cards = build_hand("Jh Jd Js Kh Ac Kd Kc")
+    @pokerhand = Holdem::PokerRank.new(cards)
+    assert_equal :full_house, @pokerhand.rank
+    assert_equal "Kh Kd Kc Jh Jd", @pokerhand.hand_as_string
+  end
+
+  def test_select_bigger_full_house_with_two_pairs
+    cards = build_hand("Jh Jd Js Kh Ac Kd As")
+    @pokerhand = Holdem::PokerRank.new(cards)
+    assert_equal :full_house, @pokerhand.rank
+    assert_equal "Jh Jd Js Ac As", @pokerhand.hand_as_string
+  end
+
 
   # Four of a kind
+
   def test_detect_four_kind
     cards = build_hand("Jh Jd Js Kh Jc Ah 7c")
     @pokerhand = Holdem::PokerRank.new(cards)
@@ -144,7 +168,7 @@ class PokerRankTest < Minitest::Test
 
   # royal flush
 
-  def test_detect_straight_flush
+  def test_detect_royal_flush
     cards = build_hand("4c 3c Ah Kh Jh Qh Th")
     @pokerhand = Holdem::PokerRank.new(cards)
 
