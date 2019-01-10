@@ -22,4 +22,6 @@ class CardTest < Minitest::Test
     assert_equal @card, @card2
     assert_equal @card.id, @card2.id
   end
+
+  # test validate syntax (Ten, no other chars, upper/lower case, etc.)
 end

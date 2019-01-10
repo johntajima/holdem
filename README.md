@@ -43,32 +43,37 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 # HLD
 
+  # Hand model calculate percentages only based on # of runs
+  # always assume first player/hole cards is Hero
 
-### models
+  hand = Holdem::Hand.new(cards, board, options: )
 
-Deck (randomized deck of 52 cards)
-- 52 Cards
+  # cards = [ [player1 cards], [player 2 cards], ...]
+  # board = ['As', '2c', '4d', .., ..]  # flop, turn, river
+  # options
+  # - trials: 10000 (default) 100-1_000_000
 
-Card
-- rank, suit
+  #
+  # Run simulation
+  #
+  response = hand.calculate!
+  {
+    players: [
+      {
+        cards: [xx, xx],
+        win: 0.123,
+        tie: 0.002
+      },
+      {
+        cards: [xx,xx],
+        win: 0.4812,
+        tie: 0.002,
+      },
+      ...
+    ],
+    board: [ 'xx', 'xx', 'xx', 'xx'],
+    trials: 10_000,
+    time: (in ms)
+  }
 
-Board
-  - flop
-  - turn
-  - river
-
-Player
-- has hole cards
-- has bet amount
-- has remaining stack amount
-- given board, should calculate what type of hand they have
-
-Hand
-model of one hand 
-- 1-9 possible players
-- each player has hole cards
-- each player has possible bet amount
-- pot amount
-- board of existing cards (flop, turn, river)
-- should calculate precentage of win/lose/chop for each player
 

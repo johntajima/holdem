@@ -3,6 +3,8 @@ require "holdem/errors"
 require "holdem/card"
 require "holdem/deck"
 require 'holdem/board'
+require 'holdem/hand'
+require 'holdem/simulation'
 
 # card index 0-12 clubs, 13-25 hearts, 26-38 diamonds, 39-51 spades
 

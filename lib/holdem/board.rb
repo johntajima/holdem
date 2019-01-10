@@ -19,5 +19,9 @@ module Holdem
     def river
       cards[4]
     end
+
+    def inspect
+      "<Holdem::Board flop=\"#{flop.join(' ')}\" turn=\"#{turn}\" river=\"#{river}\">"
+    end
   end
 end
