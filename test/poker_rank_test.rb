@@ -123,6 +123,36 @@ class PokerRankTest < Minitest::Test
     assert_equal "Jh Jd Js Jc Ah", @pokerhand.hand_as_string
   end
 
+  # straight flush
+
+  def test_detect_straight_flush
+    cards = build_hand("6h 2h 3h 4h 5h 8d 7c")
+    @pokerhand = Holdem::PokerRank.new(cards)
+
+    assert_equal :straight_flush, @pokerhand.rank
+    assert_equal "2h 3h 4h 5h 6h", @pokerhand.hand_as_string    
+  end
+
+  def test_straight_flush_pick_higher_straight_flush
+    cards = build_hand("6h 2h 3h 4h 5h 8d 7h")
+    @pokerhand = Holdem::PokerRank.new(cards)
+
+    assert_equal :straight_flush, @pokerhand.rank
+    assert_equal "3h 4h 5h 6h 7h", @pokerhand.hand_as_string
+  end
+  
+
+  # royal flush
+
+  def test_detect_straight_flush
+    cards = build_hand("4c 3c Ah Kh Jh Qh Th")
+    @pokerhand = Holdem::PokerRank.new(cards)
+
+    assert_equal :royal_flush, @pokerhand.rank
+    assert_equal "Th Jh Qh Kh Ah", @pokerhand.hand_as_string    
+  end
+
+
 
   private
 
