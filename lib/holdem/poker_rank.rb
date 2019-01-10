@@ -15,13 +15,7 @@ module Holdem
       :royal_flush
     ]
 
-    # returns hash with:
-      # cards: xxx
-      # hand: xx, xx, xx, xx, xx
-      # hand_name: "Pair"
-      # score: 2
-
-    attr_reader :orig_cards, :cards, :rank, :key_cards, :hand
+    attr_reader :rank, :key_cards, :hand
 
     def initialize(cards)
       @orig_cards = cards
@@ -38,108 +32,99 @@ module Holdem
 
     # order A -> 2, irregardless of suit
     def rank_hand
-      RANKS.reverse.each do |rank|
-        if self.send("#{rank}?".to_sym) 
-          self.send("build_#{rank}".to_sym) && return
-        end
+      RANKS.reverse.map do |rank|
+        next if !@rank.nil?
+        self.send("build_#{rank}".to_sym, @cards)
       end
     end
 
-    def build_royal_flush
-      @rank = :royal_flush
-    end
-
-    def royal_flush?
+    def hand_as_string
+      hand.map(&:to_s).join(" ")
     end
 
 
-    def build_straight_flush
-      @rank = :straight_flush
+    def build_royal_flush(cards)
+    #  @rank = :royal_flush
     end
 
-    def straight_flush?
+    def build_straight_flush(cards)
+    #  @rank = :straight_flush
     end
 
-    def build_four_kind
-      @rank = :four_kind
+    def build_four_kind(cards)
+    #  @rank = :four_kind
     end
 
-    def four_kind?
+    def build_full_house(cards)
+    #  @rank = :full_house
     end
 
-    def build_full_house
-      @rank = :full_house
+    def build_flush(cards)
+    #  @rank = :flush
     end
 
-    def full_house?
+    def build_straight(cards)
+      build_high_straight(cards) || build_wheel(cards)
     end
 
-    def build_flush
-      @rank = :flush
+    def build_high_straight(cards)
+      uniq_cards = cards.uniq {|card| card.rank_value }
+      uniq_cards.each_cons(5).each do |set|
+        if set.each_cons(2).all? {|a,b| a.rank_value == b.rank_value + 1}
+          @rank = :straight
+          @hand = set.reverse
+          @key_cards = @hand
+          return true
+        end
+      end
+      false
     end
 
-    def flush?
+    def build_wheel(cards)
+      wheel_sorted = cards.sort {|a,b| a.wheel_rank_value <=> b.wheel_rank_value}
+      uniq_cards = wheel_sorted.uniq {|card| card.wheel_rank_value }
+      uniq_cards.each_cons(5).each do |set|
+        if set.each_cons(2).all? {|a,b| b.wheel_rank_value == a.wheel_rank_value + 1}
+          @rank = :straight
+          @hand = set
+          @key_cards = @hand
+          return true
+        end
+      end
+      false
     end
 
-    def build_straight
-      @rank = :straight
-    end
+    def build_three_kind(cards)
+      selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 2}
+      return if selected.empty?
 
-    def straight?
-      wheel? || regular_straight?
-    end
-
-    def build_three_kind
       @rank = :three_kind
-      selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 2}.uniq
       @key_cards = selected
       @hand = @key_cards + (cards - selected).slice(0,2)
     end
 
-    def three_kind?
-      three = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 2}.uniq
-      !three.empty?
-    end
+    def build_two_pair(cards)
+      selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}
+      return if selected.count < 4
 
-    def build_two_pair
       @rank = :two_pair
+      @key_cards = selected.slice(0,4)
+      @hand = @key_cards + (cards - @key_cards).slice(0,1)
     end
 
-    def two_pair?
-      pairs = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}.uniq
-      pairs.count > 4
-    end
+    def build_pair(cards)
+      selected = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}
+      return if selected.empty?
 
-    def build_pair
       @rank = :pair
-      pairs = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}.uniq
-      @key_cards = pairs
-      @hand = pairs + (cards - pairs).slice(0,3)
+      @key_cards = selected
+      @hand = @key_cards + (cards - @key_cards).slice(0,3)
     end
 
-    def pair?
-      pairs = cards.select {|card| cards.count {|c| c.rank_value == card.rank_value} > 1}.uniq
-      !pairs.empty?
-    end
-
-    def build_high_card
+    def build_high_card(cards)
       @rank = :high_card
-      @hand = @cards[0..4]
+      @hand = cards.slice(0,5)
       @key_cards = @hand.slice(0,1)
-    end
-
-    def high_card?
-      true
-    end
-
-    def wheel?
-      rank_values = cards.map do |card|
-        card.rank_value == Holdem::ACE ? 1 : card.rank_value
-      end.sort.uniq
-      found_hands = rank_values.each_cons(5).map do |set|
-        set.each_cons(2).all? {|a,b| b == a + 1 }
-      end
-
     end
 
 

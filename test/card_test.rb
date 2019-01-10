@@ -33,5 +33,11 @@ class CardTest < Minitest::Test
     assert_equal [a, c, d, b], new_order
   end
 
+  # wheel_rank_value
+  def test_ace_value_is_1_for_wheel_rank_value
+    a = Holdem::Card.new('As')
+    assert_equal 1, a.wheel_rank_value    
+  end
+
   # test validate syntax (Ten, no other chars, upper/lower case, etc.)
 end

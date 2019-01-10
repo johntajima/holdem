@@ -42,6 +42,10 @@ module Holdem
       Holdem::RANKS.index(rank) + 2
     end
 
+    def wheel_rank_value
+      rank_value == 14 ? 1 : rank_value
+    end
+
     def id
       @id ||= (Holdem::SUITS.index(suit) * Holdem::SUIT_COUNT) + Holdem::RANKS.index(rank)
     end
