@@ -171,11 +171,4 @@ class PokerHandTest < Minitest::Test
 
   private
 
-  def build_hand(hand_string)
-    cards = hand_string.split(" ").map do |card|
-      Holdem::Card.new(card)
-    end
-    Holdem::PokerHand.new(cards)
-  end
-
 end

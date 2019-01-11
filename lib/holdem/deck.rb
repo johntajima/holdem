@@ -3,8 +3,8 @@ module Holdem
   class Deck
     CARD_IDS = (0..51).to_a
 
-    def initialize()
-      @order = CARD_IDS.shuffle
+    def initialize(num = Random.new_seed)
+      @order = CARD_IDS.shuffle(random: Random.new(num))
     end
 
     def deal_card!

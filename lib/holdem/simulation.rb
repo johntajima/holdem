@@ -9,7 +9,7 @@ module Holdem
 
     attr_reader :players, :board, :cards
 
-    def initialize(cards, board)
+    def initialize(cards = [], board)
       @cards = cards
       @players = cards.map do |hole_cards|
         { cards: hole_cards, win: 0, tie: 0 }
@@ -17,20 +17,28 @@ module Holdem
       @board = board
     end
 
-    def cards
-      @players.map {|player| player[:cards] }
-    end
-
     def run(trials)
       reset_counts
       1.upto(trials) do |trial|
-        deck = Holdem::Deck.new
+
+        deck = Holdem::Deck.new()
         deck.remove_cards(board.cards)
         deck.remove_cards(cards.flatten)
-        board.missing_cards.times {board.add_card(deck.deal_card!)}
+        new_board = Holdem::Board.new(board.cards)
+        new_board.missing_cards.times {new_board.add_card(deck.deal_card!)}
+        puts "\n\nRun #{trial} ---------------------------"
+        puts "Board is #{new_board.cards}"
 
-        # calculate winners and ties
-        report = Holdem::Ranking.rank_hands(cards, board)
+        # create new random deck
+        # remove used cards
+        # deal remaining cards to board
+        poker_hands = players.map do |player|
+          pokerhand = Holdem::PokerHand.new(player[:cards] + new_board.cards)
+          p "#{pokerhand.hand_as_string}: #{pokerhand.rank}"
+        end
+        # for each player, 
+          # calculate pokerhand for each player
+        # determine winner/ties 
         # increment counters
       end
       results
