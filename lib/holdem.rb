@@ -5,7 +5,7 @@ require "holdem/deck"
 require 'holdem/board'
 require 'holdem/hand'
 require 'holdem/simulation'
-require 'holdem/poker_rank'
+require 'holdem/poker_hand'
 
 # card index 0-12 clubs, 13-25 hearts, 26-38 diamonds, 39-51 spades
 

@@ -1,6 +1,6 @@
 module Holdem
 
-  class PokerRank
+  class PokerHand
 
     RANKS = [
       :high_card,

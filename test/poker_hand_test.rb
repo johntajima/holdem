@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PokerRankTest < Minitest::Test
+class PokerHandTest < Minitest::Test
 
   def setup
 
@@ -13,7 +13,7 @@ class PokerRankTest < Minitest::Test
     assert_equal :high_card, @pokerhand.rank
     assert_equal 1, @pokerhand.score
     assert_equal "Kd", @pokerhand.key_cards.map(&:to_s).join(" ")
-    assert_equal "Ah Kd Jc 8s 6d", @pokerhand.hand_as_string
+    assert_equal "Kd Jc 8s 6d 4h", @pokerhand.hand_as_string
   end
 
   def test_detect_high_card_with_ace
@@ -22,7 +22,7 @@ class PokerRankTest < Minitest::Test
     assert_equal :high_card, @pokerhand.rank
     assert_equal 1, @pokerhand.score
     assert_equal "Ah", @pokerhand.key_cards.map(&:to_s).join(" ")
-    assert_equal "Ah Jc 8s 6d 4h", @pokerhand.hand_as_string
+    assert_equal "Ah Kd Jc 8s 6d", @pokerhand.hand_as_string
   end
 
   # pair
@@ -175,7 +175,7 @@ class PokerRankTest < Minitest::Test
     cards = hand_string.split(" ").map do |card|
       Holdem::Card.new(card)
     end
-    Holdem::PokerRank.new(cards)
+    Holdem::PokerHand.new(cards)
   end
 
 end
