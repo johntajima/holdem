@@ -7,11 +7,7 @@ module Holdem
 
   class Simulation
 
-    attr_reader :report, :board, :cards
-
-    WIN = 1
-    TIE = 0
-    LOSE = -1
+    attr_reader :board, :cards
 
     # cards => [ "As Kd", "5h 5d", ...]
     # board => "2h 3h 4h"  (can be empty, flop, turn, river)
@@ -65,7 +61,7 @@ module Holdem
     end
 
     def build_hands(cards, curr_board)
-      cards.map {|cards| Holdem::PokerHand.new(cards + curr_board.cards) }
+      cards.map {|c| Holdem::PokerHand.new(c + curr_board.cards) }
     end
 
     # compare hands x hands and sum results

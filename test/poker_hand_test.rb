@@ -222,11 +222,6 @@ class PokerHandTest < Minitest::Test
     assert_equal [11, 11, 11, 11, 14], @pokerhand.kickers
   end
 
-  def test_flush_kicker
-    @pokerhand = build_hand("6h 2h 3h 4h 5h 8d 7c")
-    assert_equal [6, 5, 4, 3, 2], @pokerhand.kickers
-  end
-
   def test_straight_flush_kicker
   end
 
@@ -327,7 +322,7 @@ class PokerHandTest < Minitest::Test
     @flush = build_hand("6h 2h 3h 4h 5h 8d 7c")
     @acehigh = build_hand("2s Kd 4h 3h 8s 6d Jc")
 
-    assert_equal -1, @acehigh.better_than?(@flush)
+    assert_equal (-1), @acehigh.better_than?(@flush)
     assert_equal 1, @flush.better_than?(@acehigh)
   end
 

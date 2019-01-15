@@ -135,7 +135,7 @@ module Holdem
     # true if self is a stronger hand than passed in hand.
 
     def better_than?(hand)
-      result = if score > hand.score
+      if score > hand.score
         1
       elsif score < hand.score
         -1
