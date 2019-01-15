@@ -7,10 +7,12 @@ module Holdem
       :pair,
       :two_pair,
       :three_kind,
+      :wheel_straight,
       :straight,
       :flush,
       :full_house,
       :four_kind,
+      :wheel_straight_flush,
       :straight_flush,
       :royal_flush
     ]
@@ -52,8 +54,14 @@ module Holdem
 
     def build_straight_flush(cards)
       return unless flush = flush?(cards)
-      return unless straight_flush = straight?(flush) || wheel_straight?(flush)
+      return unless straight_flush = straight?(flush)
       set_rank(:straight_flush, straight_flush, cards)
+    end
+
+    def build_wheel_straight_flush(cards)
+      return unless flush = flush?(cards)
+      return unless straight_flush = wheel_straight?(flush)
+      set_rank(:wheel_straight_flush, straight_flush, cards)
     end
 
     def build_four_kind(cards)
@@ -80,10 +88,14 @@ module Holdem
       end
     end
 
-
     def build_straight(cards)
-      return unless straight = straight?(cards) || wheel_straight?(cards)
+      return unless straight = straight?(cards)
       set_rank(:straight, straight, cards) 
+    end
+
+    def build_wheel_straight(cards)
+      return unless straight = wheel_straight?(cards)
+      set_rank(:wheel_straight, straight, cards)
     end
 
     def build_three_kind(cards)
@@ -108,6 +120,39 @@ module Holdem
       set_rank(:high_card, cards.slice(0,1), cards)
     end
 
+
+    def kickers
+      case rank
+      when :straight, :straight_flush
+        hand.reverse.map {|c| c.rank_value }
+      when :wheel_straight, :wheel_straigh_flush
+        hand.reverse.map {|c| c.wheel_rank_value }
+      else
+        hand.map {|c| c.rank_value }
+      end
+    end
+
+    # true if self is a stronger hand than passed in hand.
+
+    def better_than?(hand)
+      result = if score > hand.score
+        1
+      elsif score < hand.score
+        -1
+      else
+        compare_kickers(hand)
+      end
+    end
+
+    # 1 if my is better, -1 if I'm work, 0 if tie
+    def compare_kickers(hand)
+      state = 0
+      (0..4).each do |index|
+        state = kickers[index] - hand.kickers[index]
+        return state unless state == 0
+      end
+      state
+    end
 
     private 
 
