@@ -17,11 +17,7 @@ module Holdem
     }
 
     def initialize(card)
-      if card.is_a?(Holdem::Card)
-        @rank, @suit = card.rank, card.suit
-      else
-        @rank, @suit = sanitize(card)
-      end
+      @rank, @suit = sanitize(card)
     end
 
     def self.from_id(id)
@@ -65,15 +61,17 @@ module Holdem
 
     private
 
-    def sanitize(card)
-      # split into chars
-      # upcase first, downcase second
-      r, s = card.split("")
-      r.upcase!
-      s.downcase!
-      raise InvalidCardError unless SUITS.include?(s) && RANKS.include?(r)
-      [r, s]
-    end
+    def sanitize(card_str)
+      if card_str.is_a?(Holdem::Card)
+        [card_str.rank, card_str.suit]
+      else
+        rank, suit = card_str.split("")
+        rank.upcase!
+        suit.downcase!
+        raise InvalidCardError unless SUITS.include?(suit) && RANKS.include?(rank)
+        [rank, suit]
+      end
+    end    
   end
 
 end
