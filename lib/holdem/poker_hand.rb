@@ -2,7 +2,7 @@ module Holdem
 
   class PokerHand
 
-    RANKS = [
+    HAND_RANKS = [
       :high_card,
       :pair,
       :two_pair,
@@ -16,8 +16,10 @@ module Holdem
       :straight_flush,
       :royal_flush
     ]
+    ACE = 14
 
     attr_reader :rank, :key_cards, :hand, :hole_cards
+
 
     def initialize(cards)
       @orig_cards = cards
@@ -30,12 +32,12 @@ module Holdem
     end
 
     def score
-      RANKS.index(rank) + 1
+      HAND_RANKS.index(rank) + 1
     end
 
     # order A -> 2, irregardless of suit
     def rank_hand
-      RANKS.reverse.map do |rank|
+      HAND_RANKS.reverse.map do |rank|
         next if !@rank.nil?
         self.send("build_#{rank}".to_sym, @cards)
       end
@@ -49,7 +51,7 @@ module Holdem
     def build_royal_flush(cards)
       return unless flush = flush?(cards)
       return unless straight_flush = straight?(flush) || wheel_straight?(flush)
-      return unless straight_flush.last.rank_value == Holdem::ACE
+      return unless straight_flush.last.rank_value == ACE
       set_rank(:royal_flush, straight_flush, cards)      
     end
 

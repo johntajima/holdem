@@ -1,9 +1,8 @@
 module Holdem
 
   class Deck
-    CARD_IDS = (0..51).to_a
-
-    FULL_BOARD = 5
+    CARD_IDS   = (0..51).to_a
+    FULL_BOARD = 5    
 
     def initialize(cards = [], board = [])
       @order = CARD_IDS.shuffle(random: Random.new(Random.new_seed))
