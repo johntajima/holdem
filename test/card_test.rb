@@ -10,12 +10,6 @@ class CardTest < Minitest::Test
     assert_equal 'A',  @card.rank
   end
 
-  def test_new_card_from_id
-    @card = Holdem::Card.from_id(3)
-    assert_equal 3, @card.id
-    assert_equal "5c", @card.to_s
-  end
-
   def test_new_card_properly_sanitizes_string
     @card = Holdem::Card.new("ac")
     assert_equal "Ac", @card.to_s
@@ -34,6 +28,16 @@ class CardTest < Minitest::Test
     @card2 = Holdem::Card.new(@card)
     assert_equal @card, @card2
   end
+
+
+  # from_id
+  
+  def test_new_card_from_id
+    @card = Holdem::Card.from_id(3)
+    assert_equal 3, @card.id
+    assert_equal "5c", @card.to_s
+  end
+
 
   def test_two_cards_are_the_same_if_they_are_same_rank_and_suit
     @card = Holdem::Card.new("As")
@@ -64,5 +68,4 @@ class CardTest < Minitest::Test
     assert a.id != b.id
   end
 
-  # test validate syntax (Ten, no other chars, upper/lower case, etc.)
 end

@@ -6,8 +6,7 @@ module Holdem
 
     def initialize(cards = [], board = [])
       @order = CARD_IDS.shuffle(random: Random.new(Random.new_seed))
-      cards.flatten.each {|card| remove_card(card) }
-      board.each {|card| remove_card(card) }
+      remove_existing_cards(cards + board)
     end
 
     def deal_card!
@@ -32,6 +31,10 @@ module Holdem
     def card(id)
       raise EmptyDeckError if id.nil?
       Card.from_id(id)
+    end
+
+    def remove_existing_cards(cards)
+      cards.flatten.each {|card| remove_card(card) }
     end
   end
 end
