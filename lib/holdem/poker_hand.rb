@@ -17,10 +17,11 @@ module Holdem
       :royal_flush
     ]
 
-    attr_reader :rank, :key_cards, :hand
+    attr_reader :rank, :key_cards, :hand, :hole_cards
 
     def initialize(cards)
       @orig_cards = cards
+      @hole_cards = cards.slice(0,2)
       @cards      = sort_cards(cards)
       @hand       = []    # made hand
       @key_cards  = []
@@ -135,6 +136,7 @@ module Holdem
     # true if self is a stronger hand than passed in hand.
 
     def better_than?(hand)
+      return 0 if hand == self
       if score > hand.score
         1
       elsif score < hand.score

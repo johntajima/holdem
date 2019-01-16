@@ -12,13 +12,8 @@ class SimluationTest < Minitest::Test
     board = "6c 8h 9d"
 
     sim = Holdem::Simulation.new([hand1, hand2, hand3], board)
-    start_time = Time.now()
-    response   = sim.run(10000)
-    end_time   = Time.now()
-    puts
-    puts "#{end_time - start_time}"
-    response[:players].map {|player| 
-      p "[#{player[:cards]}] [#{response[:board]}] Wins: #{"%.2f" % ((player[:win].to_f).round(4) * 100)}% tie: #{"%.2f" % ((player[:tie].to_f).round(4) * 100)}%"}
+    response   = sim.run(1000)
+    p response
   end
 
 end

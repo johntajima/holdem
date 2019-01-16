@@ -2,7 +2,7 @@ require "holdem/version"
 require "holdem/errors"
 require "holdem/card"
 require "holdem/deck"
-require 'holdem/board'
+#require 'holdem/board'
 require 'holdem/hand'
 require 'holdem/simulation'
 require 'holdem/poker_hand'
