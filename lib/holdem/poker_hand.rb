@@ -158,6 +158,10 @@ module Holdem
       state
     end
 
+    def id
+      @hole_cards.map(&:to_s).join(" ")
+    end
+
     private 
 
     def flush?(cards)

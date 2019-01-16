@@ -7,6 +7,11 @@ class PokerHandTest < Minitest::Test
   end
 
 
+  def test_id
+    @pokerhand = build_hand("2s Kd 4h 3h 8s 6d Jc")
+    assert_equal "2s Kd", @pokerhand.id
+  end
+
   def test_detect_high_card
     @pokerhand = build_hand("2s Kd 4h 3h 8s 6d Jc")
     

@@ -19,61 +19,26 @@ module Holdem
         hands   = build_hands(runout)
         winners = find_winners(hands)
         key = winners.count == 1 ? :win : :tie        
-        winners.each {|i| counts[i.hole_cards][key] += 1 }
+        winners.each {|i| starting_hands[i.id][key] += 1 }
       end
       finalize_report(trials, stime)
     end
 
-    def counts
-      @counts ||= begin
+    def starting_hands 
+      @starting_hands ||= begin
         cards.inject(Hash.new) do |hash, hole_cards|
-          hash[hole_cards] = {win:0, tie: 0}
+          id = hole_cards.map(&:to_s).join(" ")
+          hash[id] = { cards: hole_cards, win: 0, tie: 0 }
           hash
-        end
-      end
-    end
-
-    def players
-      @players ||= begin
-        cards.map do |cards|
-          { cards: cards, win: 0, tie: 0 }
         end
       end
     end
 
     def report
       @report ||= begin
-        { trials: nil, board: @board_str, players: players }
+        { trials: nil, board: @board_str, cards: starting_hands }
       end
     end
-
-    def build_hands(full_board)
-      cards.map {|c| Holdem::PokerHand.new(c + full_board) }
-    end
-
-    # compare hands x hands and sum results
-    # if score == (total # hands - 1) => winner
-    # else all other where score < 1/2 # of hands => reject
-      # remainer are ties
-
-    def find_winners(existing_hands)
-      hands = existing_hands.dup
-      high_hands = compare_hands(hands)
-      high_score = high_hands.map {|s| s.last }.max
-      high_hands.select {|k,v| v == high_score }.keys
-    end
-
-    # recursive function that returns array of hands that win
-    def compare_hands(hands)
-      scores = hands.map do |hand|
-        hands.sum {|vs_hand| hand.better_than?(vs_hand) }
-      end
-      scores.inject(Hash.new) do |hash, score|
-        hash[hands.shift] = score
-        hash
-      end
-    end
-
 
 
     private
@@ -92,12 +57,33 @@ module Holdem
       board.split(" ").map {|c| Holdem::Card.new(c)}
     end
 
+
+    def build_hands(full_board)
+      cards.map {|c| Holdem::PokerHand.new(c + full_board) }
+    end
+
+    def find_winners(existing_hands)
+      hands = existing_hands.dup
+      high_hands = compare_hands(hands)
+      high_score = high_hands.map {|s| s.last }.max
+      high_hands.select {|k,v| v == high_score }.keys
+    end
+
+    def compare_hands(hands)
+      scores = hands.map do |hand|
+        hands.sum {|vs_hand| hand.better_than?(vs_hand) }
+      end
+      scores.inject(Hash.new) do |hash, score|
+        hash[hands.shift] = score
+        hash
+      end
+    end
+
     def finalize_report(trials, stime)
       report[:duration] = Time.now - stime
-      players.each do |player|
-        cards = player.fetch(:cards)
-        player[:win] = counts[cards][:win]
-        player[:tie] = counts[cards][:tie]
+      starting_hands.each_pair do |key, hand|
+        hand[:win_pct] = (hand[:win].to_f / trials.to_f) * 100
+        hand[:tie_pct] = (hand[:tie].to_f / trials.to_f) * 100
       end
       report[:trials] = trials
       report
