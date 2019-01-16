@@ -1,10 +1,5 @@
 module Holdem
 
-  # init with players' cards and board
-  # run() with number of trials to test against
-  # results is array of win/tie, based on order of cards passed in
-
-
   class Simulation
 
     attr_reader :board, :cards
@@ -83,6 +78,7 @@ module Holdem
 
     private
 
+    # can be "As5h" or "As 5h"
     def sanitize_cards(cards)
       @cards_str = cards
       cards.map do |card_str|
@@ -90,6 +86,7 @@ module Holdem
       end
     end
 
+    # board can be "AsKh4d" or "As Kh 5d"
     def sanitize_board(board)
       @board_str = board
       board.split(" ").map {|c| Holdem::Card.new(c)}

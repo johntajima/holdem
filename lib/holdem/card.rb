@@ -5,6 +5,9 @@ module Holdem
 
     attr_reader :rank, :suit
 
+    SUITS      = %w|c h d s|
+    RANKS      = %w|2 3 4 5 6 7 8 9 T J Q K A|
+    SUIT_COUNT = RANKS.size
     ICONS = {
       'c' => '♣',
       'd' => '♦',
@@ -15,11 +18,16 @@ module Holdem
 
     def initialize(card)
       if card.is_a?(Holdem::Card)
-        @rank = card.rank
-        @suit = card.suit
+        @rank, @suit = card.rank, card.suit
       else
-        @rank, @suit = card.split("")
+        @rank, @suit = sanitize(card)
       end
+    end
+
+    def self.from_id(id)
+      rank = RANKS[id % SUIT_COUNT]
+      suit = SUITS[id / SUIT_COUNT]
+      new("#{rank}#{suit}")
     end
 
     def to_s
@@ -39,7 +47,7 @@ module Holdem
     end
 
     def rank_value
-      Holdem::RANKS.index(rank) + 2
+      RANKS.index(rank) + 2
     end
 
     def wheel_rank_value
@@ -47,11 +55,24 @@ module Holdem
     end
 
     def id
-      @id ||= (Holdem::SUITS.index(suit) * Holdem::SUIT_COUNT) + Holdem::RANKS.index(rank)
+      @id ||= (SUITS.index(suit) * SUIT_COUNT) + RANKS.index(rank)
     end
 
     def <=>(other)
       id <=> other.id
+    end
+
+
+    private
+
+    def sanitize(card)
+      # split into chars
+      # upcase first, downcase second
+      r, s = card.split("")
+      r.upcase!
+      s.downcase!
+      raise InvalidCardError unless SUITS.include?(s) && RANKS.include?(r)
+      [r, s]
     end
   end
 

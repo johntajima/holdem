@@ -10,6 +10,25 @@ class CardTest < Minitest::Test
     assert_equal 'A',  @card.rank
   end
 
+  def test_new_card_from_id
+    @card = Holdem::Card.from_id(3)
+    assert_equal 3, @card.id
+    assert_equal "5c", @card.to_s
+  end
+
+  def test_new_card_properly_sanitizes_string
+    @card = Holdem::Card.new("ac")
+    assert_equal "Ac", @card.to_s
+    assert_equal 'c',  @card.suit
+    assert_equal 'A',  @card.rank
+  end
+
+  def test_new_card_raises_error_if_card_is_invalid
+    assert_raises Holdem::InvalidCardError do
+      @card = Holdem::Card.new("Ak")
+    end
+  end
+
   def test_new_card_from_card
     @card = Holdem::Card.new("As")
     @card2 = Holdem::Card.new(@card)

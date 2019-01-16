@@ -29,21 +29,26 @@ Run calculations to determine % win based on hands and board using a Monte Carlo
 > sim = Holdem::Simulation.new([card_string, card_string,...], board)
 > sim.run(trials) #=> run trials and returns hash of results
 
+Output:
   {
-    trials_run: 10000,
+    trials: 10000,
     board: "As Jc Td",
-    players: [
-      {
-        cards: "As Ac",
-        win: 0.58293,
-        tie: 0.00023
+    hands: [
+      "As Ac" : {
+        win: 1230,
+        tie: 10,
+        win_pct: 89.39,
+        tie_pct: 1.23
+
       },
-      {
-        cards: "Jc Qc",
-        win: 0.21293,
-        tie: 0.00023      
-      },
-      ...
+      "Jc Qc" : {
+        win: 103,
+        tie: 10,
+        win_pct: 3.39,
+        tie_pct: 1.23
+      }
+    ],
+    duration: 3.2934
   }
 
 

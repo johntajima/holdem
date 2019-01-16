@@ -64,18 +64,6 @@ class DeckTest < Minitest::Test
     assert !@deck.cards.include?(card)
   end
 
-  # remove_cards
-
-  def test_remove_cards_removes_multiple_cards_at_once
-    card = Holdem::Card.new('2c')
-    card2 = Holdem::Card.new('2s')
-    assert @deck.cards.include?(card)
-    assert @deck.cards.include?(card2)
-    @deck.remove_cards([card, card2])
-    assert !@deck.cards.include?(card)
-    assert !@deck.cards.include?(card2)
-  end
-
   # finish_board
 
   def test_finish_board_returns_full_dealt_board

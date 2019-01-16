@@ -1,8 +1,8 @@
 module Holdem
 
   class Deck
-    CARD_IDS   = (0..51).to_a
-    FULL_BOARD = 5    
+    CARD_IDS   = (0..51).to_a   # 0-12 clubs, 13-25 h, 26-38 d, 39-51 spades
+    FULL_BOARD = 5              # flop, turn, river
 
     def initialize(cards = [], board = [])
       @order = CARD_IDS.shuffle(random: Random.new(Random.new_seed))
@@ -18,13 +18,8 @@ module Holdem
       @order.map {|i| card(i)}
     end
 
-    def remove_cards(cards = [])
-      cards.each {|card| remove_card(card) }
-    end
-
     def remove_card(card_str)
-      card = card_str.is_a?(Holdem::Card) ? card_str : Card.new(card_str)
-      @order.delete(card.id)
+      @order.delete(Card.new(card_str).id)
     end
 
     def finish_board(board)
@@ -34,12 +29,9 @@ module Holdem
 
     private
 
-    def card(index)
-      raise EmptyDeckError if index.nil?
-
-      rank = Holdem::RANKS[index % SUIT_COUNT]
-      suit = Holdem::SUITS[index / SUIT_COUNT]
-      Card.new("#{rank}#{suit}")
+    def card(id)
+      raise EmptyDeckError if id.nil?
+      Card.from_id(id)
     end
   end
 end
