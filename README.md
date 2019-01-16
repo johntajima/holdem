@@ -26,30 +26,31 @@ Or install it yourself as:
 
 Run calculations to determine % win based on hands and board using a Monte Carlo simulation
 
-> sim = Holdem::Simulation.new([card_string, card_string,...], board)
-> sim.run(trials) #=> run trials and returns hash of results
+    > sim = Holdem::Simulation.new([card_string, card_string,...], board)
+    > sim.run(trials) #=> run trials and returns hash of results
 
 Output:
-  {
-    trials: 10000,
-    board: "As Jc Td",
-    hands: [
-      "As Ac" : {
-        win: 1230,
-        tie: 10,
-        win_pct: 89.39,
-        tie_pct: 1.23
 
-      },
-      "Jc Qc" : {
-        win: 103,
-        tie: 10,
-        win_pct: 3.39,
-        tie_pct: 1.23
-      }
-    ],
-    duration: 3.2934
-  }
+    {
+      trials: 10000,
+      board: "As Jc Td",
+      hands: [
+        "As Ac" : {
+          win: 1230,
+          tie: 10,
+          win_pct: 89.39,
+          tie_pct: 1.23
+
+        },
+        "Jc Qc" : {
+          win: 103,
+          tie: 10,
+          win_pct: 3.39,
+          tie_pct: 1.23
+        }
+      ],
+      duration: 3.2934
+    }
 
 
 
@@ -72,37 +73,5 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 # HLD
 
-  # Hand model calculate percentages only based on # of runs
-  # always assume first player/hole cards is Hero
-
-  hand = Holdem::Hand.new(cards, board, options: )
-
-  # cards = [ [player1 cards], [player 2 cards], ...]
-  # board = ['As', '2c', '4d', .., ..]  # flop, turn, river
-  # options
-  # - trials: 10000 (default) 100-1_000_000
-
-  #
-  # Run simulation
-  #
-  response = hand.calculate!
-  {
-    players: [
-      {
-        cards: [xx, xx],
-        win: 0.123,
-        tie: 0.002
-      },
-      {
-        cards: [xx,xx],
-        win: 0.4812,
-        tie: 0.002,
-      },
-      ...
-    ],
-    board: [ 'xx', 'xx', 'xx', 'xx'],
-    trials: 10_000,
-    time: (in ms)
-  }
 
 
