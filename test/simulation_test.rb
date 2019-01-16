@@ -6,17 +6,14 @@ class SimluationTest < Minitest::Test
   end
 
   def test_simulation
-    hand1 = "As 3c"
-    hand2 = "Qh 3d"
-    hand3 = "Kh 3h"
-    board = "6c 8h 9h"
+    hand1 = "As Ks"
+    hand2 = "Qh Qd"
+    board = ""
 
-    sim = Holdem::Simulation.new([hand1, hand2, hand3], board)
-    response   = sim.run(100)
+    sim = Holdem::Simulation.new([hand1, hand2], board)
+    response = sim.run(5000)
+    assert_equal 5000, response[:trials]
     sim.print_results
   end
-
-
-  
 
 end
