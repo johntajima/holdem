@@ -6,4 +6,5 @@ require 'holdem/poker_hand'
 require 'holdem/simulation'
 
 module Holdem
+  
 end

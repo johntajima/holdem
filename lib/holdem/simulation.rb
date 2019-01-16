@@ -40,6 +40,15 @@ module Holdem
       end
     end
 
+    def print_results
+      puts
+      puts "Hole Cards | Board    | Win % | Tie %"
+      puts "-------------------------------------"
+      report[:cards].each_pair do |key, hand|
+        puts sprintf("%10s | %8s | % 3.2f | % 3.2f", key, report[:board], hand[:win_pct], hand[:tie_pct] )
+      end
+    end
+
 
     private
 
