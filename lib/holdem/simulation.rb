@@ -47,6 +47,7 @@ module Holdem
       report[:cards].each_pair do |key, hand|
         puts sprintf("%10s | %8s | % 3.2f | % 3.2f", key, report[:board], hand[:win_pct], hand[:tie_pct] )
       end
+      puts "Trials: #{report[:trials]}"
     end
 
 
@@ -72,10 +73,8 @@ module Holdem
     end
 
     def find_winners(existing_hands)
-      hands = existing_hands.dup
-      high_hands = compare_hands(hands)
-      high_score = high_hands.map {|s| s.last }.max
-      high_hands.select {|k,v| v == high_score }.keys
+      high_score = existing_hands.map {|h| h.rank }.max
+      winners = existing_hands.select {|h| h.rank == high_score}
     end
 
     def compare_hands(hands)

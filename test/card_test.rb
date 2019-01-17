@@ -5,16 +5,18 @@ class CardTest < Minitest::Test
   def test_new_card_with_string
     @card = Holdem::Card.new("As")
     assert_equal "As", @card.to_s
-    assert_equal 51,  @card.id
-    assert_equal 's',  @card.suit
-    assert_equal 'A',  @card.rank
+    assert_equal 51, @card.id
+    assert_equal 's', @card.suit
+    assert_equal 'A', @card.rank
+    assert_equal 52, @card.hand_rank_id
   end
 
   def test_new_card_properly_sanitizes_string
     @card = Holdem::Card.new("ac")
     assert_equal "Ac", @card.to_s
-    assert_equal 'c',  @card.suit
-    assert_equal 'A',  @card.rank
+    assert_equal 'c', @card.suit
+    assert_equal 'A', @card.rank
+    assert_equal 49, @card.hand_rank_id
   end
 
   def test_new_card_raises_error_if_card_is_invalid
