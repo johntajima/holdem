@@ -1,3 +1,4 @@
+require 'hand_rank'
 require "holdem/version"
 require "holdem/errors"
 require "holdem/card"
