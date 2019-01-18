@@ -14,7 +14,7 @@ module Holdem
     def run(trials)
       stime = Time.now()
       1.upto(trials) do |trial|
-        deck    = Holdem::Deck.new(cards, board)
+        deck    = Holdem::Deck.new(all_cards)
         runout  = deck.finish_board(board)
         hands   = build_hands(runout)
         winners = find_winners(hands)
@@ -48,6 +48,10 @@ module Holdem
         puts sprintf("%10s | %8s | % 3.2f | % 3.2f", key, report[:board], hand[:win_pct], hand[:tie_pct] )
       end
       puts "Trials: #{report[:trials]}"
+    end
+
+    def all_cards
+      cards.flatten + board
     end
 
 
