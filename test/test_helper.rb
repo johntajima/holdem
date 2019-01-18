@@ -1,14 +1,7 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "holdem"
-
 require "minitest/autorun"
 
-
-
-def build_board(cards_string)
-  cards = build_cards(cards_string)
-  Holdem::Board.new(cards)
-end
 
 def build_hand(cards_string)
   cards = build_cards(cards_string)
