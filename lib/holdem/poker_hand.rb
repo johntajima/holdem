@@ -3,25 +3,26 @@ module Holdem
   class PokerHand
 
     CATEGORIES = [
-      "Invalid Hand",
-      "High Card",
-      "Pair",
-      "Two Pairs",
-      "Three of a Kind",
-      "Straight",
-      "Flush",
-      "Full House",
-      "Four of a Kind",
-      "Straight Flush",
-      "Royal Flush"
+      :invalid,
+      :high_card,
+      :pair,
+      :two_pair,
+      :three_kind,
+      :straight,
+      :flush,
+      :full_house,
+      :four_kind,
+      :straight_flush,
+      :royal_flush
     ]
 
-    attr_reader :rank, :category, :cards
+    attr_reader :rank, :category, :cards, :key, :cat
 
     def initialize(cards)
       @cards    = cards
-      @rank     = HandRank.get(cards.map(&:hand_rank_id))
+      @rank     = HandRank.get(cards.map(&:id))
       @category = CATEGORIES[HandRank.category(@rank)]
+      @cat      = HandRank.category(@rank)
       @key      = HandRank.category_key(@rank)
     end
 
@@ -33,9 +34,11 @@ module Holdem
       cards.slice(0,2)
     end
 
+    def hand_id
+      hole_cards.map(&:to_s).join(" ")
+    end
 
     private
 
   end
-
 end
