@@ -12,16 +12,15 @@ module Holdem
     end
 
     def run(trials)
-      stime = Time.now()
-      1.upto(trials) do |trial|
+      timed_run(trials) do
         deck    = Holdem::Deck.new(all_cards)
         runout  = deck.finish_board(board)
         hands   = build_hands(runout)
         winners = find_winners(hands)
-        key = winners.count == 1 ? :win : :tie        
-        winners.each {|i| starting_hands[i.id][key] += 1 }
+        increment_counters(winners)
       end
-      finalize_report(trials, stime)
+      finalize_report
+      report
     end
 
     def starting_hands 
@@ -50,10 +49,6 @@ module Holdem
       puts "Trials: #{report[:trials]}"
     end
 
-    def all_cards
-      cards.flatten + board
-    end
-
 
     private
 
@@ -71,34 +66,37 @@ module Holdem
       board.split(" ").map {|c| Holdem::Card.new(c)}
     end
 
+    def all_cards
+      cards.flatten + board
+    end
 
     def build_hands(full_board)
       cards.map {|c| Holdem::PokerHand.new(c + full_board) }
     end
 
     def find_winners(existing_hands)
-      high_score = existing_hands.map {|h| h.rank }.max
-      winners = existing_hands.select {|h| h.rank == high_score}
+      high_score = existing_hands.map(&:rank).max
+      existing_hands.select {|h| h.rank == high_score}
     end
 
-    def compare_hands(hands)
-      scores = hands.map do |hand|
-        hands.sum {|vs_hand| hand.better_than?(vs_hand) }
-      end
-      scores.inject(Hash.new) do |hash, score|
-        hash[hands.shift] = score
-        hash
-      end
+    def increment_counters(winners)
+      key = winners.count == 1 ? :win : :tie        
+      winners.each {|hand| starting_hands[hand.id][key] += 1 }
     end
 
-    def finalize_report(trials, stime)
+    def timed_run(trials)
+      stime = Time.now
+      1.upto(trials) {|trial| yield }
       report[:duration] = Time.now - stime
-      starting_hands.each_pair do |key, hand|
-        hand[:win_pct] = (hand[:win].to_f / trials.to_f) * 100
-        hand[:tie_pct] = (hand[:tie].to_f / trials.to_f) * 100
-      end
       report[:trials] = trials
-      report
+    end
+
+
+    def finalize_report
+      starting_hands.each_pair do |key, hand|
+        hand[:win_pct] = (hand[:win].to_f / report[:trials].to_f) * 100
+        hand[:tie_pct] = (hand[:tie].to_f / report[:trials].to_f) * 100
+      end
     end
 
   end
