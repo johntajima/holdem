@@ -8,10 +8,10 @@ module Holdem
     SUITS = %w|c d h s|
     RANKS = %w|2 3 4 5 6 7 8 9 T J Q K A|
     ICONS = {
-      'c' => '♣',
-      'd' => '♦',
-      'h' => '♥',
-      's' => '♠',
+      'c' => '♣️',
+      'd' => '♦️',
+      'h' => '♥️',
+      's' => '♠️',
       'x' => 'x'
     }
     CARD_LOOKUP = {
