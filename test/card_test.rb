@@ -11,11 +11,30 @@ class CardTest < Minitest::Test
   end
 
   def test_new_card_properly_sanitizes_string
-    @card = Holdem::Card.new("ac")
+    @card = Holdem::Card.new("aC")
     assert_equal "Ac", @card.to_s
     assert_equal 49, @card.id
     assert_equal 'c', @card.suit
     assert_equal 'A', @card.rank
+  end
+
+  def test_card_with_emoji
+    @card = Holdem::Card.new("a♣️")
+    assert_equal "Ac", @card.to_s
+    @card = Holdem::Card.new("a♣")
+    assert_equal "Ac", @card.to_s
+    @card = Holdem::Card.new("a♥️")
+    assert_equal "Ah", @card.to_s
+    @card = Holdem::Card.new("a♥")
+    assert_equal "Ah", @card.to_s
+    @card = Holdem::Card.new("a♦️")
+    assert_equal "Ad", @card.to_s
+    @card = Holdem::Card.new("a♦")
+    assert_equal "Ad", @card.to_s
+    @card = Holdem::Card.new("a♠️")
+    assert_equal "As", @card.to_s
+    @card = Holdem::Card.new("a♠")
+    assert_equal "As", @card.to_s
   end
 
   def test_new_card_raises_error_if_card_is_invalid

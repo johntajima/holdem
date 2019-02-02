@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Holdem
 
   class Card
@@ -13,6 +15,17 @@ module Holdem
       'h' => '♥️',
       's' => '♠️',
       'x' => 'x'
+    }
+
+    EMOJI_SUITS = {
+      "♣️" => 'c',
+      "♦️" => 'd',
+      "♥️" => 'h',
+      "♠️" => 's',
+      "♣" => 'c',
+      "♦" => 'd',
+      "♥" => 'h',
+      "♠" => 's'
     }
     CARD_LOOKUP = {
       #       spacer,  A,  2,  3,  4,  5,  6,  7,  8,  9, 10,  J,  Q,  K,  A
@@ -92,7 +105,7 @@ module Holdem
     end
 
     def to_display
-      "#{rank}#{icon}"
+      "#{rank}#{icon}".force_encoding("UTF-8")
     end
 
     def inspect
@@ -120,11 +133,16 @@ module Holdem
       else
         rank, suit = card_str.split("")
         rank.upcase!
-        suit.downcase!
+        suit = sanitize_suit(suit)
         raise InvalidCardError unless SUITS.include?(suit) && RANKS.include?(rank)
         [rank, suit]
       end
     end    
+
+
+    def sanitize_suit(suit)
+      EMOJI_SUITS[suit] || suit.downcase
+    end
   end
 
 end
